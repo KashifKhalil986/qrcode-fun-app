@@ -19,12 +19,12 @@ const QrCode = () => {
         Scan this QR code to open the registration page
       </p>
 
-      <a
+      {/* <a
         href={registrationURL}
         className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
       >
         Go to Registration
-      </a>
+      </a> */}
     </div>
   );
 };
