@@ -1,23 +1,19 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 
 const Map = () => {
   const [score, setScore] = useState(0);
 
-  // Function to handle click
   const handleClick = () => {
     setScore(score + 10);
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      {/* Scoreboard */}
       <h1 className="text-2xl font-bold mb-6 text-blue-600">
         Score: {score}
       </h1>
 
-      {/* Zigzag Lines with Points (Vertical) */}
       <svg width="300" height="500" className="bg-white rounded-lg shadow-lg">
-        {/* Zigzag path (top to bottom) */}
         <polyline
           points="50,50 150,100 50,150 150,200 50,250 150,300 50,350 150,400 50,450"
           fill="none"
@@ -25,7 +21,6 @@ const Map = () => {
           strokeWidth="2"
         />
 
-        {/* Points on path */}
         {[
           { x: 150, y: 100 },
           { x: 150, y: 200 },

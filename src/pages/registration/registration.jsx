@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
+    const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,6 +20,7 @@ const Registration = () => {
     e.preventDefault();
     console.log("Form Submitted:", formData);
     alert("Registration successful!");
+navigate("/map")
   };
 
   return (
@@ -27,7 +30,6 @@ const Registration = () => {
           Register
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Name</label>
             <input
@@ -40,7 +42,6 @@ const Registration = () => {
             />
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -53,7 +54,6 @@ const Registration = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
@@ -66,7 +66,6 @@ const Registration = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
