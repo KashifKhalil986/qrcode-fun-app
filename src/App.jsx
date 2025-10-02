@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import QrCode from "./pages/qrcode/qrcode";
-import Registration from "./pages/registration/registration";
-import Map from "./pages/map/map";
+import QrCode from "./pages/qrcode/qrcode.jsx";
+import Registration from "./pages/registration/registration.jsx";
+import Map from "./pages/map/map.jsx";
 
 function App() {
   return (
