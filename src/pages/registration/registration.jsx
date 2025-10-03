@@ -1,12 +1,13 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
+    department: "",
     email: "",
-    password: ""
+    phone: ""
   });
 
   const handleChange = (e) => {
@@ -18,9 +19,13 @@ const Registration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // ✅ Store data in localStorage
+    localStorage.setItem("user", JSON.stringify(formData));
+
     console.log("Form Submitted:", formData);
     alert("Registration successful!");
-navigate("/map")
+    navigate("/map");
   };
 
   return (
@@ -30,8 +35,11 @@ navigate("/map")
           Register
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
             <input
               type="text"
               name="name"
@@ -43,7 +51,24 @@ navigate("/map")
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Department
+            </label>
+            <input
+              type="text"
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -55,13 +80,14 @@ navigate("/map")
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone (optional)
+            </label>
             <input
-              type="password"
-              name="password"
-              value={formData.password}
+              type="text"
+              name="phone"
+              value={formData.phone}
               onChange={handleChange}
-              required
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

@@ -1,8 +1,8 @@
-import React from "react";
 import QRCode from "react-qr-code";
 
 const QrCode = () => {
   const registrationURL = "https://qrcode-fun-app-pkls.vercel.app/registration";
+  // const registrationURL = "http://localhost:5173/registration";
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
