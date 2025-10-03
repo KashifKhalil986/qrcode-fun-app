@@ -20,25 +20,27 @@ const Registration = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ Store data in localStorage
     localStorage.setItem("user", JSON.stringify(formData));
 
     console.log("Form Submitted:", formData);
-    alert("Registration successful!");
+    alert("✅ Registration successful!");
     navigate("/map");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
-          Register
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 px-4">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <h2 className="text-3xl font-extrabold mb-2 text-center text-blue-600">
+          Register Now
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          
+        <p className="text-center text-gray-500 mb-6">
+          Fill in your details to continue
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Full Name
             </label>
             <input
               type="text"
@@ -46,12 +48,13 @@ const Registration = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your name"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Department
             </label>
             <input
@@ -60,14 +63,14 @@ const Registration = () => {
               value={formData.department}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your department"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
-          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address
             </label>
             <input
               type="email"
@@ -75,12 +78,13 @@ const Registration = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="you@example.com"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone (optional)
             </label>
             <input
@@ -88,17 +92,25 @@ const Registration = () => {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="03xx-xxxxxxx"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg shadow-md font-semibold hover:bg-blue-700 transition"
           >
             Register
           </button>
         </form>
+
+        <button
+          onClick={() => navigate("/")}
+          className="w-full mt-4 bg-gray-100 text-gray-700 py-2 rounded-lg shadow hover:bg-gray-200 transition"
+        >
+          ⬅ Back to Home
+        </button>
       </div>
     </div>
   );
