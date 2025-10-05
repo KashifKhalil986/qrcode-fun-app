@@ -8,12 +8,12 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
 
-    const storedScore = localStorage.getItem("score");
+    const storedScore = sessionStorage.getItem("score");
     if (storedScore) {
       setScore(Number(storedScore));
     }

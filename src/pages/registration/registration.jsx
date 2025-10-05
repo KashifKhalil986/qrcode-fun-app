@@ -20,10 +20,10 @@ const Registration = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    localStorage.setItem("user", JSON.stringify(formData));
+    sessionStorage.setItem("user", JSON.stringify(formData));
 
     console.log("Form Submitted:", formData);
-    alert("✅ Registration successful!");
+    alert("Registration successful!");
     navigate("/map");
   };
 

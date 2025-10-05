@@ -1,30 +1,41 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaCamera, FaMap } from "react-icons/fa";
-import QRCode from "react-qr-code";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const Map = () => {
-  const [score, setScore] = useState(0);
-  const [showQr, setShowQr] = useState(false);
+  const [score, setScore] = useState(() => {
+    const stored = sessionStorage.getItem("score");
+    return stored ? Number(stored) : 0;
+  });
+
   const [showScanner, setShowScanner] = useState(false);
   const [popupPoint, setPopupPoint] = useState(null);
   const [scanned, setScanned] = useState(false);
   const navigate = useNavigate();
 
-  const mapURL = "http://localhost:5173/map";
-  // const mapURL = "https://qrcode-fun-app.vercel.app/map";
+  useEffect(() => {
+    sessionStorage.setItem("score", score);
+  }, [score]);
 
   useEffect(() => {
-    localStorage.setItem("score", score);
-  }, [score]);
+    const handleStorageChange = () => {
+      const storedScore = sessionStorage.getItem("score");
+      if (storedScore) setScore(Number(storedScore));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    handleStorageChange();
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const handleScanned = (data) => {
     if (data && !scanned) {
       console.log("Scanned QR Code:", data);
-      setScore((prev) => prev + 10);
+      const newScore = score + 10;
+      setScore(newScore);
+      sessionStorage.setItem("score", newScore);
       setScanned(true);
-      alert("QR Code Scanned! Congrats, you earned 10 points.");
+      alert("QR Code Scanned! You earned 10 points.");
 
       setTimeout(() => {
         setShowScanner(false);
@@ -35,11 +46,11 @@ const Map = () => {
 
   const handlePointClick = (point) => {
     setPopupPoint(point);
+    setShowScanner(false);
   };
 
   const BottomNav = () => (
     <div className="w-full flex justify-around items-center bg-gray-50 py-3 mt-6 rounded-xl shadow-inner">
-      {/* Profile */}
       <button
         onClick={() => {
           setShowScanner(false);
@@ -53,7 +64,7 @@ const Map = () => {
 
       <button
         onClick={() => {
-          setShowScanner(false); 
+          setShowScanner(false);
           navigate("/map");
         }}
         className="flex flex-col items-center text-blue-800 font-bold transition"
@@ -140,23 +151,6 @@ const Map = () => {
 
         <BottomNav />
       </div>
-
-      {showQr && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white p-6 rounded-2xl shadow-xl w-80 flex flex-col items-center">
-            <h2 className="text-lg font-bold mb-4 text-blue-600">
-              Scan QR Code
-            </h2>
-            <QRCode value={mapURL} size={200} />
-            <button
-              className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-md"
-              onClick={() => setShowQr(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
 
       {showScanner && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-70">
