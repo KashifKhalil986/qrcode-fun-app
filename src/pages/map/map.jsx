@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaCamera, FaMap } from "react-icons/fa"; 
+import { FaUser, FaCamera, FaMap } from "react-icons/fa";
 import QRCode from "react-qr-code";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
@@ -9,11 +9,11 @@ const Map = () => {
   const [showQr, setShowQr] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [popupPoint, setPopupPoint] = useState(null);
-  const [scanned, setScanned] = useState(false); 
+  const [scanned, setScanned] = useState(false);
   const navigate = useNavigate();
 
-  // const mapURL = "http://localhost:5173/map";
-  const mapURL = "https://qrcode-fun-app.vercel.app/map";
+  const mapURL = "http://localhost:5173/map";
+  // const mapURL = "https://qrcode-fun-app.vercel.app/map";
 
   useEffect(() => {
     localStorage.setItem("score", score);
@@ -22,23 +22,58 @@ const Map = () => {
   const handleScanned = (data) => {
     if (data && !scanned) {
       console.log("Scanned QR Code:", data);
-
       setScore((prev) => prev + 10);
       setScanned(true);
-
       alert("QR Code Scanned! Congrats, you earned 10 points.");
 
-      
       setTimeout(() => {
         setShowScanner(false);
-        setScanned(false); 
-      }, 500);
+        setScanned(false);
+      }, 800);
     }
   };
 
   const handlePointClick = (point) => {
     setPopupPoint(point);
   };
+
+  const BottomNav = () => (
+    <div className="w-full flex justify-around items-center bg-gray-50 py-3 mt-6 rounded-xl shadow-inner">
+      {/* Profile */}
+      <button
+        onClick={() => {
+          setShowScanner(false);
+          navigate("/profile");
+        }}
+        className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
+      >
+        <FaUser size={26} />
+        <span className="text-xs mt-1">Profile</span>
+      </button>
+
+      <button
+        onClick={() => {
+          setShowScanner(false); 
+          navigate("/map");
+        }}
+        className="flex flex-col items-center text-blue-800 font-bold transition"
+      >
+        <FaMap size={26} />
+        <span className="text-xs mt-1">Map</span>
+      </button>
+
+      <button
+        onClick={() => {
+          setShowScanner(true);
+          setScanned(false);
+        }}
+        className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
+      >
+        <FaCamera size={26} />
+        <span className="text-xs mt-1">Camera</span>
+      </button>
+    </div>
+  );
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 py-6 px-4">
@@ -103,34 +138,7 @@ const Map = () => {
           )}
         </div>
 
-        <div className="w-full flex justify-around items-center bg-gray-50 py-3 mt-6 rounded-xl shadow-inner">
-          <button
-            onClick={() => navigate("/profile")}
-            className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
-          >
-            <FaUser size={26} />
-            <span className="text-xs mt-1">Profile</span>
-          </button>
-
-          <button
-            onClick={() => navigate("/map")}
-            className="flex flex-col items-center text-blue-800 font-bold transition"
-          >
-            <FaMap size={26} />
-            <span className="text-xs mt-1">Map</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setShowScanner(true);
-              setScanned(false); 
-            }}
-            className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
-          >
-            <FaCamera size={26} />
-            <span className="text-xs mt-1">Camera</span>
-          </button>
-        </div>
+        <BottomNav />
       </div>
 
       {showQr && (
@@ -151,8 +159,8 @@ const Map = () => {
       )}
 
       {showScanner && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-          <div className="bg-white p-6 rounded-2xl shadow-xl w-[90%] max-w-md">
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-70">
+          <div className="bg-white p-6 rounded-2xl shadow-xl w-[90%] max-w-md flex flex-col items-center">
             <h2 className="text-lg font-bold mb-4 text-center text-blue-600">
               Scan a QR Code
             </h2>
@@ -160,9 +168,7 @@ const Map = () => {
               width={400}
               height={300}
               onUpdate={(err, result) => {
-                if (result) {
-                  handleScanned(result.text);
-                }
+                if (result) handleScanned(result.text);
               }}
             />
             <button
@@ -171,6 +177,8 @@ const Map = () => {
             >
               Cancel
             </button>
+
+            <BottomNav />
           </div>
         </div>
       )}
