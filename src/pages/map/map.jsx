@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaCamera, FaMap } from "react-icons/fa";
+import { FaUser, FaCamera, FaMap, FaPlay, FaFlagCheckered } from "react-icons/fa";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 
 const Map = () => {
@@ -10,27 +10,21 @@ const Map = () => {
   });
 
   const [showScanner, setShowScanner] = useState(false);
-  const [popupPoint, setPopupPoint] = useState(null);
   const [scanned, setScanned] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleBeforeUnload = () => sessionStorage.removeItem("score");
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem("score", score);
   }, [score]);
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedScore = sessionStorage.getItem("score");
-      if (storedScore) setScore(Number(storedScore));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    handleStorageChange();
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
-
   const handleScanned = (data) => {
     if (data && !scanned) {
-      console.log("Scanned QR Code:", data);
       const newScore = score + 10;
       setScore(newScore);
       sessionStorage.setItem("score", newScore);
@@ -40,127 +34,206 @@ const Map = () => {
       setTimeout(() => {
         setShowScanner(false);
         setScanned(false);
-      }, 800);
+      }, 1000);
     }
   };
 
-  const handlePointClick = (point) => {
-    setPopupPoint(point);
-    setShowScanner(false);
-  };
+  // Checkpoints except start and end
+  const checkpoints = [
+    { id: 2, label: "Registration" },
+    { id: 3, label: "Workshop" },
+    { id: 4, label: "Exhibition" },
+    { id: 5, label: "Gaming Zone" },
+    { id: 6, label: "Auditorium" },
+    { id: 7, label: "Food Court" },
+  ];
+
+  // Map point positions
+  const positions = [
+    { left: "95%", top: "85%" }, // START (old 1)
+    { left: "65%", top: "88%" }, // 2
+    { left: "80%", top: "65%" }, // 3
+    { left: "50%", top: "60%" }, // 4
+    { left: "65%", top: "40%" }, // 5
+    { left: "25%", top: "35%" }, // 6
+    { left: "50%", top: "20%" }, // 7
+    { left: "35%", top: "2%" },  // END (old 8)
+  ];
 
   const BottomNav = () => (
-    <div className="w-full flex justify-around items-center bg-gray-50 py-3 mt-6 rounded-xl shadow-inner">
-      <button
-        onClick={() => {
-          setShowScanner(false);
-          navigate("/profile");
-        }}
-        className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
-      >
-        <FaUser size={26} />
-        <span className="text-xs mt-1">Profile</span>
-      </button>
+    <div className="w-full flex justify-center items-center bg-[#0B1C33] py-3 mt-6 rounded-t-2xl shadow-inner">
+      <div className="flex justify-around items-center w-1/2 min-w-[250px]">
+        <button
+          onClick={() => {
+            setShowScanner(false);
+            navigate("/profile");
+          }}
+          className="flex flex-col items-center text-gray-300 hover:text-white transition"
+        >
+          <FaUser size={22} />
+          <span className="text-xs mt-1">Leaderboard</span>
+        </button>
 
-      <button
-        onClick={() => {
-          setShowScanner(false);
-          navigate("/map");
-        }}
-        className="flex flex-col items-center text-blue-800 font-bold transition"
-      >
-        <FaMap size={26} />
-        <span className="text-xs mt-1">Map</span>
-      </button>
+        <button
+          onClick={() => {
+            setShowScanner(false);
+            navigate("/map");
+          }}
+          className="flex flex-col items-center text-[#1E9BFF] font-semibold transition"
+        >
+          <FaMap size={22} />
+          <span className="text-xs mt-1">Map</span>
+        </button>
 
-      <button
-        onClick={() => {
-          setShowScanner(true);
-          setScanned(false);
-        }}
-        className="flex flex-col items-center text-blue-600 hover:text-blue-800 transition"
-      >
-        <FaCamera size={26} />
-        <span className="text-xs mt-1">Camera</span>
-      </button>
+        <button
+          onClick={() => {
+            setShowScanner(true);
+            setScanned(false);
+          }}
+          className="flex flex-col items-center text-gray-300 hover:text-white transition"
+        >
+          <FaCamera size={22} />
+          <span className="text-xs mt-1">Scan</span>
+        </button>
+      </div>
     </div>
   );
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 py-6 px-4">
-      <div className="bg-white rounded-2xl shadow-xl flex flex-col items-center p-6 w-full max-w-lg relative">
-        <h1 className="text-xl font-bold mb-6">
-          <span className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-md">
-            Score: {score}
-          </span>
-        </h1>
+    <div
+      className="relative flex flex-col items-center min-h-screen text-white overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(180deg, #224E61 0%, #18354E 50%, #0D1B3A 100%)",
+      }}
+    >
+      {/* Header */}
+      <div className="relative z-10 text-center mt-8">
+        <h2 className="text-lg font-bold">YOUR EVENT JOURNEY AWAITS!</h2>
+        <p className="text-[#B4C1D9] text-sm">
+          Track your stops, earn points, and complete the roadmap!
+        </p>
+      </div>
 
-        <div className="relative">
+      {/* Map */}
+      <div className="relative flex flex-col items-center mt-12 z-10 w-full px-4">
+        <div className="relative w-full max-w-sm" style={{ height: "420px" }}>
+          {/* White path */}
           <svg
-            width="300"
-            height="500"
-            className="bg-gray-50 rounded-xl shadow-lg border border-gray-200"
+            className="absolute top-0 left-0 w-full h-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
           >
-            <polyline
-              points="50,50 150,100 50,150 150,200 50,250 150,300 50,350 150,400 50,450"
+            <path
+              d={positions
+                .map((pos, index, arr) => {
+                  const x = parseFloat(pos.left);
+                  const y = parseFloat(pos.top);
+                  if (index === 0) return `M ${x} ${y}`;
+                  const prev = arr[index - 1];
+                  const prevX = parseFloat(prev.left);
+                  const prevY = parseFloat(prev.top);
+                  const cx = (prevX + x) / 2 + (index % 2 === 0 ? 5 : -5);
+                  const cy = (prevY + y) / 2 + (index % 2 === 0 ? -5 : 5);
+                  return `Q ${cx} ${cy}, ${x} ${y}`;
+                })
+                .join(" ")}
               fill="none"
-              stroke="#2563eb"
+              stroke="white"
               strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.9"
             />
-            {[
-              { x: 150, y: 100 },
-              { x: 150, y: 200 },
-              { x: 150, y: 300 },
-              { x: 150, y: 400 },
-              { x: 50, y: 150 },
-              { x: 50, y: 250 },
-              { x: 50, y: 350 },
-              { x: 50, y: 450 },
-            ].map((point, index) => (
-              <circle
-                key={index}
-                cx={point.x}
-                cy={point.y}
-                r="12"
-                fill="#ef4444"
-                className="cursor-pointer hover:fill-green-500 transition-colors"
-                onClick={() => handlePointClick(point)}
-              />
-            ))}
           </svg>
 
-          {popupPoint && (
-            <div
-              className="absolute bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-sm animate-fade-in"
-              style={{
-                top: popupPoint.y - 40,
-                left: popupPoint.x + 20,
-              }}
-            >
-              <h3 className="font-semibold text-blue-600">🎯 Point Clicked</h3>
-              <p className="text-gray-600">You clicked a map point!</p>
-              <button
-                className="mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                onClick={() => setPopupPoint(null)}
-              >
-                Close
-              </button>
+          {/* START POINT */}
+          <div
+            className="absolute flex flex-col items-center"
+            style={{
+              left: positions[0].left,
+              top: positions[0].top,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center shadow-lg">
+              <FaPlay className="text-white text-lg" />
             </div>
-          )}
-        </div>
+            {/* <p className="text-xs mt-2 text-yellow-300 font-semibold">Start</p> */}
+          </div>
 
+          {/* CHECKPOINTS */}
+          {checkpoints.map((point, index) => {
+            const posIndex = index + 1; // since start used index 0
+            const pos = positions[posIndex];
+            const isLeft = [1, 3, 5].includes(posIndex); // points 2,4,6 (index 1,3,5)
+            const bgColor = isLeft ? "bg-red-500" : "bg-yellow-400";
+            const labelSide = isLeft ? "left-[-90px]" : "left-[60px]";
+            const textAlign = isLeft ? "text-right" : "text-left";
+
+            return (
+              <div
+                key={point.id}
+                className="absolute"
+                style={{
+                  left: pos.left,
+                  top: pos.top,
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <div className="flex flex-col items-center relative">
+                  <div
+                    className={`absolute ${labelSide} top-1/2 -translate-y-1/2 ${textAlign} w-20`}
+                  >
+                    <p className="text-xs text-white font-medium">{point.label}</p>
+                  </div>
+                  <div
+                    onClick={() =>
+                      alert(`You clicked on ${point.label}! +10 points 🎯`)
+                    }
+                    className={`w-9 h-9 ${bgColor} border-[2px] border-white rounded-full cursor-pointer hover:scale-110 transition-transform flex items-center justify-center shadow-md`}
+                  >
+                    <span className="text-white font-bold text-xs">
+                      {String(point.id).padStart(2, "0")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* END POINT */}
+          <div
+            className="absolute flex flex-col items-center"
+            style={{
+              left: positions[7].left,
+              top: positions[7].top,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-lg">
+              <FaFlagCheckered className="text-white text-lg" />
+            </div>
+            {/* <p className="text-xs mt-2 text-blue-300 font-semibold">End</p> */}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="absolute bottom-0 left-0 w-full z-10">
         <BottomNav />
       </div>
 
+      {/* QR Scanner Popup */}
       {showScanner && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-70">
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-70 z-50">
           <div className="bg-white p-6 rounded-2xl shadow-xl w-[90%] max-w-md flex flex-col items-center">
             <h2 className="text-lg font-bold mb-4 text-center text-blue-600">
               Scan a QR Code
             </h2>
             <BarcodeScannerComponent
-              width={400}
-              height={300}
+              width={350}
+              height={250}
               onUpdate={(err, result) => {
                 if (result) handleScanned(result.text);
               }}
@@ -171,8 +244,6 @@ const Map = () => {
             >
               Cancel
             </button>
-
-            <BottomNav />
           </div>
         </div>
       )}

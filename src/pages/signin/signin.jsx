@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Registration = () => {
+const SignIn = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    department: "",
     email: "",
-    phone: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -19,9 +17,18 @@ const Registration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sessionStorage.setItem("user", JSON.stringify(formData));
-    alert("🎉 Registration successful!");
-    navigate("/map");
+    const storedUser = JSON.parse(sessionStorage.getItem("user"));
+
+    if (
+      storedUser &&
+      storedUser.email === formData.email &&
+      storedUser.password === formData.password
+    ) {
+      alert("✅ Sign in successful!");
+      navigate("/map");
+    } else {
+      alert("❌ Invalid email or password!");
+    }
   };
 
   return (
@@ -41,41 +48,15 @@ const Registration = () => {
 
       <div className="relative z-10 mb-6 text-center">
         <h2 className="text-2xl font-bold tracking-wide">
-          UNLOCK YOUR PASS!
+          ACCESS YOUR PASS!
         </h2>
         <p className="text-[#B4C1D9] text-md mt-1">
-          Fill in your details to join the Tech Café experience.
+          Sign in to continue your Tech Café journey.
         </p>
       </div>
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-xs">
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-[#E0E0E0]">Full Name:</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="e.g., Sara Ahmed"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full bg-[#DFE5F22E] text-white placeholder-gray-300 px-3 py-2 rounded-md outline-none focus:ring-2 focus:ring-white/70 text-sm"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-[#E0E0E0]">Department:</label>
-            <input
-              type="text"
-              name="department"
-              placeholder="e.g., R&D"
-              value={formData.department}
-              onChange={handleChange}
-              required
-              className="w-full bg-[#DFE5F22E] text-white placeholder-gray-300 px-3 py-2 rounded-md outline-none focus:ring-2 focus:ring-white/70 text-sm"
-            />
-          </div>
-
           <div className="flex flex-col gap-1">
             <label className="text-xs text-[#E0E0E0]">Email:</label>
             <input
@@ -90,40 +71,41 @@ const Registration = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-[#E0E0E0]">Phone:</label>
+            <label className="text-xs text-[#E0E0E0]">Password:</label>
             <input
-              type="text"
-              name="phone"
-              placeholder="e.g., +20 1XXXXXXXXX"
-              value={formData.phone}
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
               onChange={handleChange}
+              required
               className="w-full bg-[#DFE5F22E] text-white placeholder-gray-300 px-3 py-2 rounded-md outline-none focus:ring-2 focus:ring-white/70 text-sm"
             />
           </div>
 
-   <label className="flex items-center text-xs text-[#E0E0E0] mt-1">
+            <label className="flex items-center text-xs text-[#E0E0E0] mt-1">
      <input 
      type="checkbox"
       className="mr-2 bg-[#A0A0A01A]" 
       /> 
-     Receive event updates (email) 
-     </label>
+            Remember me
+          </label>
 
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white py-2.5 rounded-lg font-semibold shadow-md hover:opacity-90 transition mt-2 text-sm"
           >
-            Register
+            Sign In
           </button>
         </form>
 
         <p className="text-center text-[#E0E0E0] mt-3 text-xs">
-          Already have a pass?{" "}
+          Don’t have an account?{" "}
           <span
-            onClick={() => navigate("/signin")}
+            onClick={() => navigate("/registration")}
             className="underline cursor-pointer hover:text-white"
           >
-            Sign in
+            Register
           </span>
         </p>
       </div>
@@ -135,4 +117,4 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+export default SignIn;
