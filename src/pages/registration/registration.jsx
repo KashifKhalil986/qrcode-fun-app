@@ -21,7 +21,7 @@ const Registration = () => {
     e.preventDefault();
     sessionStorage.setItem("user", JSON.stringify(formData));
     alert("🎉 Registration successful!");
-    navigate("/map");
+    navigate("/signin");
   };
 
   return (
