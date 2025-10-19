@@ -2,8 +2,8 @@ import QRCode from "react-qr-code";
 
 const QrCode = () => {
   // Keep the same URL (works locally and online)
-  const registrationURL = "http://localhost:5173/registration";
-  // const registrationURL = "https://qrcode-fun-app.vercel.app/registration";
+  // const registrationURL = "http://localhost:5173/registration";
+  const registrationURL = "https://qrcode-fun-app.vercel.app/registration";
 
   return (
     <div
